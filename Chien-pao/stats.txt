@@ -1,0 +1,7 @@
+HP: 80
+Attack: 120
+Defense: 80
+Sp. Attack: 90
+Sp. Defense: 65
+Speed: 135
+Total: 570
