@@ -10,10 +10,12 @@ const main = async () => {
         // User prompting and fetching phase
         let pokemonName = await getPokemonName();
         let pokemonData = await fetchPokemon(pokemonName);
-        let options = await getOptions();
+        if (pokemonData != -1) {
+            let options = await getOptions();
 
-        // Processing phase
-        await processOptions(pokemonName, pokemonData, options); 
+            // Processing phase
+            await processOptions(pokemonName, pokemonData, options); 
+        }
 
         // Continue? phase
         let active = await getContinue();

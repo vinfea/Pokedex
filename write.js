@@ -53,11 +53,16 @@ const createSprites = async (pokemonName, spritesData) => {
     for (let [key, value] of Object.entries(spritesData)) {
         if (typeof value == "string") {
             // Value is the URL of the image to fetch
-            let response = await fetch(value);
-            let arrayBuffer = await response.arrayBuffer();
-            let filepath = path.join(process.cwd(), pokemonName, key + ".png"); 
-            await fs.writeFile(filepath, Buffer.from(arrayBuffer));
-            console.log("Saved: " + filepath);         
+            try {
+                let response = await fetch(value);
+                let arrayBuffer = await response.arrayBuffer();
+                let filepath = path.join(process.cwd(), pokemonName, key + ".png"); 
+                await fs.writeFile(filepath, Buffer.from(arrayBuffer));
+                console.log("Saved: " + filepath);  
+            }
+            catch {
+                console.log("Error copying sprites."); 
+            }   
         }
     }
 }
@@ -65,12 +70,17 @@ const createSprites = async (pokemonName, spritesData) => {
 const createArtwork = async (pokemonName, artworkData) => {
     for (let [key, value] of Object.entries(artworkData)) {
         if (typeof value == "string") {
-            // Value is the URL of the image to fetch
-            let response = await fetch(value);
-            let arrayBuffer = await response.arrayBuffer();
-            let filepath = path.join(process.cwd(), pokemonName, "official_artwork_" + key + ".png"); 
-            await fs.writeFile(filepath, Buffer.from(arrayBuffer));
-            console.log("Saved: " + filepath); 
+            try {
+                // Value is the URL of the image to fetch
+                let response = await fetch(value);
+                let arrayBuffer = await response.arrayBuffer();
+                let filepath = path.join(process.cwd(), pokemonName, "official_artwork_" + key + ".png"); 
+                await fs.writeFile(filepath, Buffer.from(arrayBuffer));
+                console.log("Saved: " + filepath); 
+            }
+            catch {
+                console.log("Error copying official artwork."); 
+            }
         }
     }
 }
