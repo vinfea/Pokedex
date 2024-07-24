@@ -50,19 +50,31 @@ const writeStats = async (pokemonName, statsData) => {
 }
 
 const createSprites = async (pokemonName, spritesData) => {
+    let spritePromises = [];
+    let filenames = [];
     for (let [key, value] of Object.entries(spritesData)) {
         if (typeof value == "string") {
             // Value is the URL of the image to fetch
             try {
-                let response = await fetch(value);
-                let arrayBuffer = await response.arrayBuffer();
-                let filepath = path.join(process.cwd(), pokemonName, key + ".png"); 
-                await fs.writeFile(filepath, Buffer.from(arrayBuffer));
-                console.log("Saved: " + filepath);  
+                spritePromises.push(fetch(value).then((res) => res.arrayBuffer())); 
+                filenames.push(key); 
             }
             catch {
-                console.log("Error copying sprites."); 
+                console.log("Error fetching sprites."); 
             }   
+        }
+    }
+
+    spritePromises = await Promise.all(spritePromises); 
+
+    for (let i = 0; i < spritePromises.length; i++) {
+        try {
+            let filepath = path.join(process.cwd(), pokemonName, filenames[i] + ".png"); 
+            await fs.writeFile(filepath, Buffer.from(spritePromises[i]));
+            console.log("Saved: " + filepath);   
+        }
+        catch (error) {
+            console.log("Error writing sprites."); 
         }
     }
 }
